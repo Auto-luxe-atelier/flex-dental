@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flex Dental Clinic — Rendez-vous</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --teal:#00c2cb;
+  --teal-dark:#009aa2;
+  --teal-glow:rgba(0,194,203,0.15);
+  --bg:#f4fafb;
+  --surface:#ffffff;
+  --surface2:#f0f9fa;
+  --surface3:#e8f6f7;
+  --border:#cce9ec;
+  --border-lit:#99d6db;
+  --text:#0a2a2e;
+  --text-muted:#4a8a90;
+  --text-dim:#9acbcf;
+  --radius:12px;
+  --tr:0.18s ease;
+  --shadow:0 2px 14px rgba(0,120,130,0.07);
+  --shadow-lg:0 8px 30px rgba(0,120,130,0.12);
+}
+
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  padding:0 0 60px;
+}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,#006670 0%,#00a8b0 45%,#00c2cb 100%);
+  padding:32px 20px 28px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{content:'';position:absolute;top:-50px;right:-50px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.06);}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-30px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.04);}
+
+.brand{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:10px;}
+
+.brand-logo-img{max-height:70px;max-width:220px;object-fit:contain;filter:brightness(0) invert(1);}
+
+.brand-name{
+  font-size:1.9rem;font-weight:800;color:#fff;
+  letter-spacing:2px;line-height:1;
+}
+.brand-name .flex{color:#fff;}
+.brand-name .dental{color:rgba(255,255,255,0.7);font-weight:500;}
+
+.brand-tagline{
+  color:rgba(255,255,255,0.8);
+  font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;
+}
+
+.brand-info{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;
+  margin-top:8px;
+}
+.brand-info-item{
+  display:flex;align-items:center;gap:6px;
+  color:rgba(255,255,255,0.75);font-size:0.78rem;
+}
+
+/* ── CONTAINER ── */
+.container{max-width:700px;margin:0 auto;padding:24px 16px;display:flex;flex-direction:column;gap:16px;}
+
+/* ── CARD ── */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;box-shadow:var(--shadow);overflow:hidden;
+  transition:box-shadow var(--tr),border-color var(--tr);
+}
+.card:focus-within{box-shadow:var(--shadow-lg);border-color:var(--border-lit);}
+
+.card-header{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 20px;background:var(--surface2);
+  border-bottom:1px solid var(--border);
+}
+.card-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+  background:linear-gradient(135deg,rgba(0,194,203,0.15),rgba(0,194,203,0.05));
+  border:1px solid rgba(0,194,203,0.2);
+}
+.card-title{font-size:0.77rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);}
+
+.card-body{padding:20px;display:flex;flex-direction:column;gap:14px;}
+
+/* ── GRID ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+@media(max-width:500px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+/* ── FIELD ── */
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:0.72rem;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-muted);}
+.field label .req{color:#e53e3e;margin-left:2px;}
+.field label .opt{color:var(--text-dim);font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;}
+
+.field input,.field select,.field textarea{
+  background:var(--surface3);border:1.5px solid var(--border);
+  border-radius:10px;color:var(--text);
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:0.93rem;
+  padding:11px 14px;
+  transition:border-color var(--tr),box-shadow var(--tr),background var(--tr);width:100%;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--teal);
+  box-shadow:0 0 0 3px var(--teal-glow);background:#fff;
+}
+.field input::placeholder{color:var(--text-dim);}
+.field select option{background:#fff;color:var(--text);}
+
+.field-err{font-size:0.72rem;color:#e53e3e;display:none;}
+.field-err.show{display:block;}
+.field-hint{font-size:0.72rem;color:var(--text-dim);}
+
+/* ── SOINS ── */
+.soins-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+@media(max-width:480px){.soins-grid{grid-template-columns:1fr;}}
+
+.soin{
+  border:1.5px solid var(--border);border-radius:10px;
+  padding:12px 14px;cursor:pointer;
+  display:flex;align-items:center;gap:10px;
+  transition:all var(--tr);user-select:none;background:var(--surface3);
+}
+.soin:hover{border-color:var(--teal);background:#fff;}
+.soin.active{
+  border-color:var(--teal);
+  background:linear-gradient(135deg,rgba(0,194,203,0.07),rgba(0,194,203,0.02));
+  box-shadow:0 2px 10px rgba(0,194,203,0.1);
+}
+.soin-chk{
+  width:20px;height:20px;min-width:20px;
+  border:2px solid var(--border-lit);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;
+  transition:all var(--tr);
+}
+.soin.active .soin-chk{background:var(--teal);border-color:var(--teal);color:#fff;}
+.soin-chk-ico{opacity:0;transition:opacity var(--tr);}
+.soin.active .soin-chk-ico{opacity:1;}
+.soin-info{flex:1;}
+.soin-name{font-size:0.87rem;font-weight:600;color:var(--text);}
+.soin-icon{margin-right:3px;}
+
+/* ── RADIO ── */
+.radio-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px;}
+.radio-opt{
+  flex:1;min-width:80px;
+  border:1.5px solid var(--border);border-radius:10px;
+  padding:10px 12px;text-align:center;cursor:pointer;
+  font-size:0.85rem;font-weight:500;color:var(--text-muted);
+  transition:all var(--tr);user-select:none;background:var(--surface3);
+}
+.radio-opt input{display:none;}
+.radio-opt:hover{border-color:var(--teal);}
+.radio-opt.active{border-color:var(--teal);background:var(--teal);color:#fff;font-weight:600;}
+
+/* ── DOULEUR ── */
+.douleur-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.d-btn{
+  width:42px;height:42px;border-radius:8px;
+  border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.9rem;font-weight:700;cursor:pointer;
+  transition:all var(--tr);user-select:none;background:var(--surface3);color:var(--text-muted);
+}
+.d-btn:hover{border-color:var(--teal);}
+.d-btn.active{color:#fff;border-color:transparent;}
+.d-btn.d1.active,.d-btn.d2.active{background:#38b2ac;}
+.d-btn.d3.active{background:#d69e2e;}
+.d-btn.d4.active{background:#e67d27;}
+.d-btn.d5.active{background:#e53e3e;}
+.d-lbl{font-size:0.72rem;color:var(--text-dim);margin-left:6px;}
+
+/* ── SUBMIT ── */
+.btn-submit{
+  width:100%;padding:16px;
+  background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+  color:#fff;font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:1rem;font-weight:700;letter-spacing:1px;
+  border:none;border-radius:12px;cursor:pointer;
+  transition:transform var(--tr),box-shadow var(--tr);
+  box-shadow:0 4px 20px rgba(0,194,203,0.3);margin-top:6px;
+}
+.btn-submit:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,194,203,0.4);}
+.btn-submit:disabled{opacity:0.6;cursor:not-allowed;}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:#fff;border:1px solid var(--border-lit);
+  border-radius:var(--radius);padding:12px 20px;
+  font-size:0.9rem;display:flex;align-items:center;gap:9px;
+  box-shadow:var(--shadow-lg);z-index:9999;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;
+  opacity:0;white-space:nowrap;color:var(--text);
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.success{border-left:4px solid #38a169;}
+.toast.error{border-left:4px solid #e53e3e;}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,40,50,0.7);
+  z-index:1000;display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;pointer-events:none;transition:opacity 0.25s;
+}
+.modal-overlay.show{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--surface);border:1px solid var(--border-lit);
+  border-radius:18px;padding:28px;max-width:520px;width:100%;
+  transform:scale(0.93);transition:transform 0.25s;
+  max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-lg);
+}
+.modal-overlay.show .modal{transform:scale(1);}
+.modal-title{
+  font-size:1.1rem;font-weight:700;color:var(--teal);
+  letter-spacing:0.5px;margin-bottom:18px;
+  display:flex;align-items:center;gap:8px;
+}
+.modal-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:8px 0;border-bottom:1px solid var(--border);
+  font-size:0.87rem;gap:12px;
+}
+.modal-row:last-of-type{border-bottom:none;}
+.modal-key{color:var(--text-muted);flex-shrink:0;min-width:130px;font-weight:500;}
+.modal-val{text-align:right;color:var(--text);font-weight:600;word-break:break-word;white-space:pre-line;}
+.modal-val.hl{color:var(--teal);}
+
+.modal-actions{display:flex;gap:10px;margin-top:20px;}
+.modal-actions button{
+  flex:1;padding:12px;border-radius:10px;
+  font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:0.92rem;cursor:pointer;border:none;transition:all var(--tr);
+}
+.btn-cancel-m{background:var(--surface3);color:var(--text-muted);border:1.5px solid var(--border) !important;}
+.btn-cancel-m:hover{border-color:var(--teal) !important;}
+.btn-confirm-m{background:linear-gradient(135deg,var(--teal),var(--teal-dark));color:#fff;}
+.btn-confirm-m:hover:not(:disabled){box-shadow:0 4px 14px rgba(0,194,203,0.3);}
+.btn-confirm-m:disabled{opacity:0.6;cursor:not-allowed;}
+
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;margin-right:7px;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="brand">
+    <img src="https://flexdentalclinic.com/wp-content/uploads/2025/11/cropped-cropped-Logo-flex-contour-s.jpg"
+         class="brand-logo-img" alt="Flex Dental Clinic"
+         onerror="this.style.display='none';document.getElementById('brand-text').style.display='block'">
+    <div id="brand-text" style="display:none;">
+      <div class="brand-name"><span class="flex">FLEX </span><span class="dental">DENTAL CLINIC</span></div>
+    </div>
+    <div class="brand-tagline">Centre de soins dentaires — Ouled Fayet</div>
+    <div class="brand-info">
+      <div class="brand-info-item">📍 Rue des Jardins, Ouled Fayet 16000</div>
+      <div class="brand-info-item">📞 +213 781 82 69 50</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+<form id="form" novalidate>
+
+  <!-- ── PATIENT ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">👤</div>
+      <div class="card-title">Informations du patient</div>
+    </div>
+    <div class="card-body">
+      <div class="grid-2">
+        <div class="field">
+          <label>Prénom <span class="req">*</span></label>
+          <input type="text" id="prenom" autocomplete="given-name" placeholder="Prénom">
+          <div class="field-err" id="err-prenom">Champ obligatoire.</div>
+        </div>
+        <div class="field">
+          <label>Nom <span class="req">*</span></label>
+          <input type="text" id="nom" autocomplete="family-name" placeholder="Nom">
+          <div class="field-err" id="err-nom">Champ obligatoire.</div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Date de naissance <span class="req">*</span></label>
+          <input type="date" id="ddn">
+          <div class="field-err" id="err-ddn">Champ obligatoire.</div>
+        </div>
+        <div class="field">
+          <label>Âge <span class="opt">(calculé auto)</span></label>
+          <input type="text" id="age" readonly placeholder="—" style="background:#f0f9fa;cursor:default;">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Téléphone <span class="req">*</span></label>
+          <input type="tel" id="tel" autocomplete="tel" placeholder="Ex : 06 00 00 00 00">
+          <div class="field-err" id="err-tel">Champ obligatoire.</div>
+        </div>
+        <div class="field">
+          <label>Adresse <span class="req">*</span></label>
+          <input type="text" id="adresse" placeholder="Ex : Ouled Fayet, Alger">
+          <div class="field-err" id="err-adresse">Champ obligatoire.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Sexe <span class="req">*</span></label>
+        <div class="radio-group" id="sexe-group">
+          <label class="radio-opt"><input type="radio" name="sexe" value="Homme">👨 Homme</label>
+          <label class="radio-opt"><input type="radio" name="sexe" value="Femme">👩 Femme</label>
+          <label class="radio-opt"><input type="radio" name="sexe" value="Enfant">🧒 Enfant</label>
+        </div>
+        <div class="field-err" id="err-sexe">Veuillez sélectionner.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MÉDECIN ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🩺</div>
+      <div class="card-title">Médecin & Rendez-vous</div>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label>Choisir le médecin <span class="req">*</span></label>
+        <select id="medecin">
+          <option value="">— Sélectionner un médecin —</option>
+          <option>Dr Chouaib Chetouane</option>
+          <option>Dr Younes Benoumechiara</option>
+          <option>Dr Ines Matouk</option>
+          <option>Dr Benoumechiara Walid</option>
+        </select>
+        <div class="field-err" id="err-medecin">Veuillez choisir un médecin.</div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Date du RDV <span class="req">*</span></label>
+          <input type="date" id="daterdv">
+          <div class="field-err" id="err-daterdv">Date obligatoire.</div>
+        </div>
+        <div class="field">
+          <label>Heure <span class="req">*</span></label>
+          <input type="time" id="heure" min="08:00" max="18:00" step="1800">
+          <div class="field-err" id="err-heure">Heure obligatoire.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SOINS ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🦷</div>
+      <div class="card-title">Soin(s) demandé(s)</div>
+    </div>
+    <div class="card-body">
+      <div class="soins-grid">
+        <div class="soin" data-soin="Consultation générale"><div class="soin-chk"><span class="soin-chk-ico">✓</span></div><div class="soin-info"><div class="soin-name"><span class="soin-icon">🔍</span>Consultation générale</div></div></div>
+        <div class="soin" data-soin="Détartrage"><div class="soin-chk"><span class="soin-chk-ico">✓</span></div><div class="soin-info"><div class="soin-name"><span class="soin-icon">✨</span>Détartrage</div></div></div>
+        <div class="soin" data-soin="Plombage / Obturation"><div class="soin-chk"><span class="soin-chk-ico">✓</span></div><div class="soin-info"><div class="soin-name"><span class="soin-icon">🔧</span>Plombage / Obturation</div></div></div>
+        <div class="soin" data-soin="Extraction dentaire"><div class="soin-chk"><span class="soin-chk-ico">✓</span></div><div class="soin-info"><div class="soin-name"><span class="soin-icon">🦷</span>Extraction dentaire</div></div></div>
+        <div class="soin" data-soin="Blanchiment dentaire"><div class="soin-chk"><span class="soin-chk-ico">✓</span></div><div class="soin-info"><div class="soin-name"><span class="soin-icon">⭐</span>Blanchiment dentaire</div></div></div>
+        <div class="soin" data-soin="Orthodontie / Appareil"><div class="soin-chk"><span class="soin-chk-ico">✓</span></div><div class="soin-info"><div class="soin-name"><span class="soin-icon">😁</span>Orthodontie / Appareil</div></div></div>
+        <div class="soin" data-soin="Implant dentaire"><div class="soin-chk"><span class="soin-chk-ico">✓</span></div><div class="soin-info"><div class="soin-name"><span class="soin-icon">🔩</span>Implant dentaire</div></div></div>
+        <div class="soin" data-soin="Couronne / Prothèse"><div class="soin-chk"><span class="soin-chk-ico">✓</span></div><div class="soin-info"><div class="soin-name"><span class="soin-icon">👑</span>Couronne / Prothèse</div></div></div>
+        <div class="soin" data-soin="Hygiène dentaire"><div class="soin-chk"><span class="soin-chk-ico">✓</span></div><div class="soin-info"><div class="soin-name"><span class="soin-icon">🧼</span>Hygiène dentaire</div></div></div>
+        <div class="soin" data-soin="Parodontologie (gencives)"><div class="soin-chk"><span class="soin-chk-ico">✓</span></div><div class="soin-info"><div class="soin-name"><span class="soin-icon">💊</span>Parodontologie (gencives)</div></div></div>
+      </div>
+      <div class="field-err" id="err-soins">Sélectionnez au moins un soin.</div>
+    </div>
+  </div>
+
+  <!-- ── ÉTAT DE SANTÉ ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">📋</div>
+      <div class="card-title">État de santé & douleurs</div>
+    </div>
+    <div class="card-body">
+
+      <div class="field">
+        <label>Première visite dans notre clinique ? <span class="req">*</span></label>
+        <div class="radio-group" id="premiere-group">
+          <label class="radio-opt"><input type="radio" name="premiere" value="Oui, première visite">✅ Oui, première visite</label>
+          <label class="radio-opt"><input type="radio" name="premiere" value="Non, déjà venu">🔄 Non, déjà venu</label>
+        </div>
+        <div class="field-err" id="err-premiere">Veuillez sélectionner.</div>
+      </div>
+
+      <div class="field">
+        <label>A déjà eu une intervention dentaire ? <span class="req">*</span></label>
+        <div class="radio-group" id="intervention-group">
+          <label class="radio-opt"><input type="radio" name="intervention" value="Oui">Oui</label>
+          <label class="radio-opt"><input type="radio" name="intervention" value="Non">Non</label>
+          <label class="radio-opt"><input type="radio" name="intervention" value="Ne sait pas">Ne sait pas</label>
+        </div>
+        <div class="field-err" id="err-intervention">Veuillez sélectionner.</div>
+      </div>
+
+      <div class="field" id="intervention-detail-wrap" style="display:none;">
+        <label>Préciser l'intervention <span class="opt">(facultatif)</span></label>
+        <input type="text" id="intervention-detail" placeholder="Ex : extraction, détartrage il y a 2 ans…">
+      </div>
+
+      <div class="field">
+        <label>Niveau de douleur actuel <span class="req">*</span></label>
+        <div class="douleur-row">
+          <div class="d-btn d1" data-val="1">1</div>
+          <div class="d-btn d2" data-val="2">2</div>
+          <div class="d-btn d3" data-val="3">3</div>
+          <div class="d-btn d4" data-val="4">4</div>
+          <div class="d-btn d5" data-val="5">5</div>
+          <div class="d-btn" data-val="0" id="d-none" style="font-size:0.75rem;width:auto;padding:0 10px;">Aucune</div>
+          <span class="d-lbl" id="d-lbl">— Non renseigné</span>
+        </div>
+        <div class="field-err" id="err-douleur">Veuillez indiquer le niveau de douleur.</div>
+      </div>
+
+      <div class="field">
+        <label>Antécédents médicaux / Allergies <span class="opt">(facultatif)</span></label>
+        <textarea id="antecedents" rows="3" placeholder="Ex : diabète, hypertension, allergie à la pénicilline, anticoagulants…" style="resize:vertical;"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Remarques supplémentaires <span class="opt">(facultatif)</span></label>
+        <textarea id="remarques" rows="2" placeholder="Autres informations utiles pour le médecin…" style="resize:vertical;"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <button type="submit" class="btn-submit" id="btn-submit">
+    🦷 Confirmer le rendez-vous
+  </button>
+
+</form>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-title">🦷 Récapitulatif du RDV</div>
+    <div id="modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel-m" id="btn-cancel">Modifier</button>
+      <button class="btn-confirm-m" id="btn-confirm">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-icon"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+
+/* ═══════════════════════════════════════════════════════
+   ✏️  MODIFIER UNIQUEMENT CETTE SECTION
+═══════════════════════════════════════════════════════ */
+
+const CLIENT = {
+  nom: "Flex Dental Clinic",
+  webhookURL: "https://n8n-hetzner.duckdns.org/webhook/CHANGER-ICI",
+  joursFermes: [4, 5] // Jeudi=4, Vendredi=5
+}
+
+/* ═══════════════════════════════════════════════════════
+   NE PAS MODIFIER EN DESSOUS
+═══════════════════════════════════════════════════════ */
+
+document.title = CLIENT.nom + " — Rendez-vous"
+document.getElementById('daterdv').min = new Date().toISOString().split('T')[0]
+
+// ── ÂGE AUTO ──
+document.getElementById('ddn').addEventListener('change', function() {
+  if (!this.value) { document.getElementById('age').value = ''; return }
+  const ddn  = new Date(this.value)
+  const today = new Date()
+  let age = today.getFullYear() - ddn.getFullYear()
+  const m = today.getMonth() - ddn.getMonth()
+  if (m < 0 || (m === 0 && today.getDate() < ddn.getDate())) age--
+  document.getElementById('age').value = age > 0 ? age + ' ans' : '—'
+})
+
+// ── JOURS FERMÉS ──
+document.getElementById('daterdv').addEventListener('change', function() {
+  const d = new Date(this.value + 'T12:00:00')
+  if (CLIENT.joursFermes.includes(d.getDay())) {
+    showToast("La clinique est fermée ce jour — choisissez une autre date.", 'error')
+    this.value = ''
+  }
+})
+
+// ── RADIO GROUPES ──
+function initRadioGroup(groupId, errId) {
+  document.getElementById(groupId).querySelectorAll('.radio-opt').forEach(opt => {
+    opt.addEventListener('click', function() {
+      document.getElementById(groupId).querySelectorAll('.radio-opt').forEach(o => {
+        o.classList.remove('active')
+        o.querySelector('input').checked = false
+      })
+      this.classList.add('active')
+      this.querySelector('input').checked = true
+      showErr(errId, false)
+    })
+  })
+}
+
+initRadioGroup('sexe-group', 'sexe')
+initRadioGroup('premiere-group', 'premiere')
+
+// Intervention group + detail
+document.getElementById('intervention-group').querySelectorAll('.radio-opt').forEach(opt => {
+  opt.addEventListener('click', function() {
+    document.getElementById('intervention-group').querySelectorAll('.radio-opt').forEach(o => {
+      o.classList.remove('active')
+      o.querySelector('input').checked = false
+    })
+    this.classList.add('active')
+    this.querySelector('input').checked = true
+    showErr('intervention', false)
+    const val = this.querySelector('input').value
+    document.getElementById('intervention-detail-wrap').style.display = val === 'Oui' ? 'block' : 'none'
+  })
+})
+
+// ── SOINS ──
+let soinsSelectionnes = []
+document.querySelectorAll('.soin').forEach(el => {
+  el.addEventListener('click', function() {
+    const s = this.dataset.soin
+    const isActive = this.classList.toggle('active')
+    if (isActive) soinsSelectionnes.push(s)
+    else soinsSelectionnes = soinsSelectionnes.filter(x => x !== s)
+  })
+})
+
+// ── DOULEUR ──
+let douleurVal = null
+document.querySelectorAll('.d-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.d-btn').forEach(b => b.classList.remove('active'))
+    this.classList.add('active')
+    douleurVal = this.dataset.val
+    const labels = ['','Légère','Modérée','Importante','Forte','Très forte / Urgente']
+    const lbl = document.getElementById('d-lbl')
+    if (douleurVal === '0') lbl.textContent = '✅ Aucune douleur'
+    else lbl.textContent = '→ ' + labels[parseInt(douleurVal)] || ''
+    showErr('douleur', false)
+  })
+})
+
+// ── VALIDATION ──
+function showErr(id, show) {
+  const el = document.getElementById('err-' + id)
+  if (el) show ? el.classList.add('show') : el.classList.remove('show')
+}
+
+function validateForm() {
+  let ok = true
+  const champs = [
+    { id: 'prenom',  val: () => document.getElementById('prenom').value },
+    { id: 'nom',     val: () => document.getElementById('nom').value },
+    { id: 'ddn',     val: () => document.getElementById('ddn').value },
+    { id: 'tel',     val: () => document.getElementById('tel').value },
+    { id: 'adresse', val: () => document.getElementById('adresse').value },
+    { id: 'medecin', val: () => document.getElementById('medecin').value },
+    { id: 'daterdv', val: () => document.getElementById('daterdv').value },
+    { id: 'heure',   val: () => document.getElementById('heure').value },
+  ]
+  champs.forEach(c => {
+    const empty = !c.val() || c.val().trim() === ''
+    showErr(c.id, empty)
+    if (empty) ok = false
+  })
+
+  const sexeChecked = document.querySelector('input[name="sexe"]:checked')
+  showErr('sexe', !sexeChecked)
+  if (!sexeChecked) ok = false
+
+  const premiereChecked = document.querySelector('input[name="premiere"]:checked')
+  showErr('premiere', !premiereChecked)
+  if (!premiereChecked) ok = false
+
+  const interventionChecked = document.querySelector('input[name="intervention"]:checked')
+  showErr('intervention', !interventionChecked)
+  if (!interventionChecked) ok = false
+
+  showErr('soins', soinsSelectionnes.length === 0)
+  if (soinsSelectionnes.length === 0) ok = false
+
+  showErr('douleur', douleurVal === null)
+  if (douleurVal === null) ok = false
+
+  return ok
+}
+
+// ── RECAP ──
+function buildRecap() {
+  const labels = ['','Légère (1)','Modérée (2)','Importante (3)','Forte (4)','Très forte / Urgente (5)']
+  const douleurText = douleurVal === '0' ? 'Aucune' : (labels[parseInt(douleurVal)] || '—')
+
+  const rows = [
+    ['Patient',         document.getElementById('prenom').value + ' ' + document.getElementById('nom').value],
+    ['Date de naissance', document.getElementById('ddn').value + ' (' + document.getElementById('age').value + ')'],
+    ['Sexe',            document.querySelector('input[name="sexe"]:checked')?.value || '—'],
+    ['Téléphone',       document.getElementById('tel').value],
+    ['Adresse',         document.getElementById('adresse').value],
+    ['Médecin',         document.getElementById('medecin').value],
+    ['Date RDV',        document.getElementById('daterdv').value],
+    ['Heure',           document.getElementById('heure').value],
+    ['Soins demandés',  soinsSelectionnes.join('\n')],
+    ['1ère visite',     document.querySelector('input[name="premiere"]:checked')?.value || '—'],
+    ['Intervention passée', document.querySelector('input[name="intervention"]:checked')?.value || '—'],
+    ['Détail intervention', document.getElementById('intervention-detail').value || '—'],
+    ['Niveau douleur',  douleurText],
+    ['Antécédents / Allergies', document.getElementById('antecedents').value || '—'],
+    ['Remarques',       document.getElementById('remarques').value || '—'],
+  ]
+
+  document.getElementById('modal-body').innerHTML = rows.map(([k, v]) =>
+    `<div class="modal-row">
+      <span class="modal-key">${k}</span>
+      <span class="modal-val">${v}</span>
+    </div>`
+  ).join('')
+}
+
+const modalOverlay = document.getElementById('modal-overlay')
+const btnCancel    = document.getElementById('btn-cancel')
+const btnConfirm   = document.getElementById('btn-confirm')
+
+function openModal()  { buildRecap(); modalOverlay.classList.add('show') }
+function closeModal() {
+  modalOverlay.classList.remove('show')
+  btnConfirm.disabled = false
+  btnConfirm.textContent = 'Confirmer'
+}
+
+btnCancel.addEventListener('click', closeModal)
+modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal() })
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal() })
+
+document.getElementById('form').addEventListener('submit', function(e) {
+  e.preventDefault()
+  if (!validateForm()) { showToast('Veuillez corriger les champs manquants.', 'error'); return }
+  openModal()
+})
+
+btnConfirm.addEventListener('click', async function() {
+  btnConfirm.disabled = true
+  btnConfirm.innerHTML = '<span class="spinner"></span>Envoi…'
+  closeModal()
+  document.getElementById('btn-submit').disabled = true
+  document.getElementById('btn-submit').innerHTML = '<span class="spinner"></span>Envoi en cours…'
+
+  const data = {
+    prenom:           document.getElementById('prenom').value,
+    nom:              document.getElementById('nom').value,
+    date_naissance:   document.getElementById('ddn').value,
+    age:              document.getElementById('age').value,
+    sexe:             document.querySelector('input[name="sexe"]:checked')?.value || '',
+    telephone:        document.getElementById('tel').value,
+    adresse:          document.getElementById('adresse').value,
+    medecin:          document.getElementById('medecin').value,
+    date_rdv:         document.getElementById('daterdv').value,
+    heure:            document.getElementById('heure').value,
+    soins:            soinsSelectionnes.join(', '),
+    premiere_visite:  document.querySelector('input[name="premiere"]:checked')?.value || '',
+    intervention_passee: document.querySelector('input[name="intervention"]:checked')?.value || '',
+    detail_intervention: document.getElementById('intervention-detail').value || '',
+    niveau_douleur:   douleurVal || '0',
+    antecedents:      document.getElementById('antecedents').value || '',
+    remarques:        document.getElementById('remarques').value || '',
+  }
+
+  try {
+    const res = await fetch(CLIENT.webhookURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    if (!res.ok) throw new Error('Erreur ' + res.status)
+    showToast('Rendez-vous confirmé ✅ Nous vous contacterons bientôt.', 'success')
+
+    // Reset
+    document.getElementById('form').reset()
+    document.querySelectorAll('.soin.active').forEach(el => el.classList.remove('active'))
+    document.querySelectorAll('.radio-opt.active').forEach(el => { el.classList.remove('active'); el.querySelector('input').checked = false })
+    document.querySelectorAll('.d-btn.active').forEach(el => el.classList.remove('active'))
+    document.getElementById('age').value = ''
+    document.getElementById('d-lbl').textContent = '— Non renseigné'
+    document.getElementById('intervention-detail-wrap').style.display = 'none'
+    soinsSelectionnes = []
+    douleurVal = null
+
+  } catch(err) {
+    showToast("Erreur lors de l'envoi. Veuillez réessayer.", 'error')
+    console.error(err)
+  } finally {
+    document.getElementById('btn-submit').disabled = false
+    document.getElementById('btn-submit').textContent = '🦷 Confirmer le rendez-vous'
+    btnConfirm.disabled = false
+    btnConfirm.textContent = 'Confirmer'
+  }
+})
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast')
+  document.getElementById('toast-icon').textContent = type === 'success' ? '✅' : '❌'
+  document.getElementById('toast-msg').textContent = msg
+  t.className = 'toast ' + type
+  t.classList.add('show')
+  setTimeout(() => t.classList.remove('show'), 5000)
+}
+
+</script>
+</body>
+</html>
